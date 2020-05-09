@@ -3,15 +3,12 @@ import pytest
 
 from persistentdict import PersistentDict
 
-DBFILE = os.environ['DBFILE']
-
 
 @pytest.fixture
 def pd():
-    pd = PersistentDict(DBFILE)
+    pd = PersistentDict(":memory:")
     pd.clear()
-    yield pd
-    os.remove(DBFILE)
+    return pd
 
 
 def test_simple_values(pd):

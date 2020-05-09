@@ -23,12 +23,16 @@ class PersistentDict(object):
     sqls = dict()
 
     def __init__(self, connection_str):
-        if os.path.isabs(connection_str):
-            filepath = connection_str
+        if connection_str == ':memory:':
+            self.descriptor = ':memory:'
+            self.connection = sqlite3.connect(':memory:')
         else:
-            filepath = os.path.join(os.getcwd(), connection_str)
-        self.descriptor = filepath
-        self.connection = sqlite3.connect(filepath)
+            if os.path.isabs(connection_str):
+                filepath = connection_str
+            else:
+                filepath = os.path.join(os.getcwd(), connection_str)
+            self.descriptor = filepath
+            self.connection = sqlite3.connect(filepath)
         with open(SQLITE_SOURCE_FILE, 'r') as sqlite_source:
             self.sqls = yaml.safe_load(sqlite_source)
         self._validate_sqls()
