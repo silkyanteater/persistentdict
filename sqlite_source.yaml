@@ -1,0 +1,48 @@
+create schema:
+    type: create
+    sql: >-
+        CREATE TABLE IF NOT EXISTS
+        tDict (
+            key TEXT PRIMARY KEY,
+            value BLOB
+        );
+purge data:
+    type: delete
+    sql: >-
+        DELETE FROM tDict;
+get length:
+    type: select
+    sql: >-
+        SELECT count(*) FROM tDict;
+get value:
+    type: select
+    sql: >-
+        SELECT value FROM tDict WHERE key=?;
+set item:
+    type: insert
+    sql: >-
+        INSERT OR REPLACE INTO tDict VALUES (?, ?);
+delete item:
+    type: delete
+    sql: >-
+        DELETE FROM tDict WHERE key=?;
+contains key:
+    type: select
+    sql: >-
+        SELECT count(*) FROM tDict WHERE key=?;
+get all keys:
+    type: select
+    sql: >-
+        SELECT key FROM tDict;
+get all values:
+    type: select
+    sql: >-
+        SELECT value FROM tDict;
+get all items:
+    type: select
+    sql: >-
+        SELECT key, value FROM tDict;
+get one item:
+    type: select
+    sql: >-
+        SELECT key, value FROM tDict LIMIT 1;
