@@ -1,5 +1,5 @@
 create schema:
-    type: create
+    type: script
     sql: >-
         CREATE TABLE IF NOT EXISTS tPersistentDict (
             key TEXT PRIMARY KEY,

@@ -49,7 +49,7 @@ class PersistentDict(object):
             assert 'type' in sql_obj, f"Source type missing for key '{sql_key}"
             assert isinstance(sql_obj['type'], str), f"Invalid type, string expected for key '{sql_key}'"
             sql_obj['type'] = sql_obj['type'].strip().lower()
-            assert sql_obj['type'] in ('script', 'create', 'select', 'insert', 'update', 'delete'), f"Invalid type for key '{sql_key}'"
+            assert sql_obj['type'] in ('script', 'select', 'insert', 'update', 'delete'), f"Invalid type for key '{sql_key}'"
             assert 'sql' in sql_obj, f"Source code missing for key '{sql_key}"
             assert isinstance(sql_obj['sql'], str), f"Invalid yaml structure, source string expected for '{sql_key}:sql']"
 
