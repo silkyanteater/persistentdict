@@ -66,27 +66,27 @@ class PersistentDict(object):
         return self._execute('get length')[0][0]
 
     def __getitem__(self, key):
-        rs = self._execute('get value', (key, ))
+        rs = self._execute('get value', (pickle.dumps(key), ))
         if len(rs) == 0:
             raise KeyError(f"'{key}'")
         else:
             return pickle.loads(rs[0][0])
 
     def __setitem__(self, key, value):
-        self._execute('set item', (key, pickle.dumps(value)))
+        self._execute('set item', (pickle.dumps(key), pickle.dumps(value)))
 
     def __delitem__(self, key):
-        self._execute('delete item', (key, ))
+        self._execute('delete item', (pickle.dumps(key), ))
 
     def __contains__(self, key):
-        return self._execute('contains key', (key, ))[0][0] >= 1
+        return self._execute('contains key', (pickle.dumps(key), ))[0][0] >= 1
 
     def __iter__(self):
         rs = self._execute('get all keys')
-        return iter(r[0] for r in rs)
+        return iter(pickle.loads(r[0]) for r in rs)
 
     def __str__(self):
-        base_str = f'Dict-like persistent key-value store of {len(self)} item(s)'
+        base_str = f'Dict-like persistent key-value store'
         if hasattr(self, 'descriptor'):
             return f'{base_str} at {self.descriptor}'
         else:
@@ -101,7 +101,7 @@ class PersistentDict(object):
 
     def items(self):
         rs = self._execute('get all items')
-        return iter((r[0], pickle.loads(r[1])) for r in rs)
+        return iter((pickle.loads(r[0]), pickle.loads(r[1])) for r in rs)
 
     def get(self, key, default = None):
         try:
@@ -144,8 +144,9 @@ class PersistentDict(object):
         rs = self._execute('get one item')
         if len(rs) == 0:
             raise KeyError(f"popitem(): dictionary is empty")
-        del self[rs[0][0]]
-        return (rs[0][0], pickle.loads(rs[0][1]))
+        key = pickle.loads(rs[0][0])
+        del self[key]
+        return (key, pickle.loads(rs[0][1]))
 
     def setdefault(self, key, default = None):
         if key not in self:

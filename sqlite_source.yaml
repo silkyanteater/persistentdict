@@ -2,47 +2,47 @@ create schema:
     type: create
     sql: >-
         CREATE TABLE IF NOT EXISTS
-        tDict (
+        tPersistentDict (
             key TEXT PRIMARY KEY,
             value BLOB
         );
 purge data:
     type: delete
     sql: >-
-        DELETE FROM tDict;
+        DELETE FROM tPersistentDict;
 get length:
     type: select
     sql: >-
-        SELECT count(*) FROM tDict;
+        SELECT count(*) FROM tPersistentDict;
 get value:
     type: select
     sql: >-
-        SELECT value FROM tDict WHERE key=?;
+        SELECT value FROM tPersistentDict WHERE key=?;
 set item:
     type: insert
     sql: >-
-        INSERT OR REPLACE INTO tDict VALUES (?, ?);
+        INSERT OR REPLACE INTO tPersistentDict VALUES (?, ?);
 delete item:
     type: delete
     sql: >-
-        DELETE FROM tDict WHERE key=?;
+        DELETE FROM tPersistentDict WHERE key=?;
 contains key:
     type: select
     sql: >-
-        SELECT count(*) FROM tDict WHERE key=?;
+        SELECT count(*) FROM tPersistentDict WHERE key=?;
 get all keys:
     type: select
     sql: >-
-        SELECT key FROM tDict;
+        SELECT key FROM tPersistentDict;
 get all values:
     type: select
     sql: >-
-        SELECT value FROM tDict;
+        SELECT value FROM tPersistentDict;
 get all items:
     type: select
     sql: >-
-        SELECT key, value FROM tDict;
+        SELECT key, value FROM tPersistentDict;
 get one item:
     type: select
     sql: >-
-        SELECT key, value FROM tDict LIMIT 1;
+        SELECT key, value FROM tPersistentDict LIMIT 1;
