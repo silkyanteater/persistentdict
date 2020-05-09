@@ -1,8 +1,7 @@
 create schema:
     type: create
     sql: >-
-        CREATE TABLE IF NOT EXISTS
-        tPersistentDict (
+        CREATE TABLE IF NOT EXISTS tPersistentDict (
             key TEXT PRIMARY KEY,
             value BLOB
         );

@@ -53,11 +53,14 @@ class PersistentDict(object):
         assert sql_key in self.sqls, f"Missing code from source file '{SQLITE_SOURCE_FILE}': '{sql_key}'"
         sql_obj = self.sqls[sql_key]
         with get_cursor(self) as cursor:
-            cursor.execute(sql_obj['sql'], sql_args)
-            if sql_obj['type'] == 'select':
-                return cursor.fetchall()
-            elif sql_obj['type'] in ('insert', 'update'):
-                return cursor.lastrowid
+            if sql_obj['type'] == 'script':
+                cursor.executescript(sql_obj['sql'])
+            else:
+                cursor.execute(sql_obj['sql'], sql_args)
+                if sql_obj['type'] == 'select':
+                    return cursor.fetchall()
+                elif sql_obj['type'] in ('insert', 'update'):
+                    return cursor.lastrowid
 
     def _ensure_schema(self):
         self._execute('create schema')
