@@ -1,5 +1,5 @@
 #!/bin/bash
 
-export PYTHONPATH=$PYTHONPATH:..
+export PYTHONPATH=$PYTHONPATH:../persistentdict
 
 poetry run pytest tests

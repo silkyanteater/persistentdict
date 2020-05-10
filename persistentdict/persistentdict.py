@@ -4,7 +4,7 @@ import sqlite3
 import pickle
 import yaml
 
-from const import SQLITE_SOURCE_FILE
+from .const import SQLITE_SOURCE_FILE
 
 
 @contextmanager
