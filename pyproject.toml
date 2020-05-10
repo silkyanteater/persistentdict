@@ -3,6 +3,7 @@ name = "persistentdict"
 version = "0.2.0"
 description = "Dictionary-like object with SQLite connection"
 authors = ["silkyanteater <cyclopesrufus@gmail.com>"]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
