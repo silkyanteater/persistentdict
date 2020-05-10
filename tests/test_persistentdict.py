@@ -6,9 +6,7 @@ from persistentdict import PersistentDict
 
 @pytest.fixture
 def pd():
-    pd = PersistentDict(":memory:")
-    pd.clear()
-    return pd
+    return PersistentDict(":memory:")
 
 
 def test_simple_values(pd):
