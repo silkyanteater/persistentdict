@@ -53,18 +53,41 @@ class PersistentDict(object):
             assert 'sql' in sql_obj, f"Source code missing for key '{sql_key}"
             assert isinstance(sql_obj['sql'], str), f"Invalid yaml structure, source string expected for '{sql_key}:sql']"
 
-    def _execute(self, sql_key, sql_args = ()):
+    def _execute(self, sql_key, sql_params = ()):
         assert sql_key in self.sqls, f"Missing code from source file '{SQLITE_SOURCE_FILE}': '{sql_key}'"
         sql_obj = self.sqls[sql_key]
+        if sql_obj['type'] == 'script':
+            assert len(sql_params) == 0, f"No parameters accepted for scirpts"
+        exec_many = False
+        try:
+            exec_many = isinstance(sql_params[0], (list, tuple, dict))
+        except:
+            pass
         with get_cursor(self) as cursor:
             if sql_obj['type'] == 'script':
                 cursor.executescript(sql_obj['sql'])
             else:
-                cursor.execute(sql_obj['sql'], sql_args)
-                if sql_obj['type'] == 'select':
-                    return cursor.fetchall()
-                elif sql_obj['type'] in ('insert', 'update'):
-                    return cursor.lastrowid
+                if exec_many:
+                    if sql_obj['type'] == 'select':
+                        rss = list()
+                        for params in sql_params:
+                            cursor.execute(sql_obj['sql'], params)
+                            rss.append(cursor.fetchall())
+                        return rss
+                    elif sql_obj['type'] in ('insert', 'update'):
+                        rowids = list()
+                        for params in sql_params:
+                            cursor.execute(sql_obj['sql'], params)
+                            rowids.append(cursor.lastrowid)
+                        return rowids
+                    else:
+                        cursor.executemany(sql_obj['sql'], sql_params)
+                else:
+                    cursor.execute(sql_obj['sql'], sql_params)
+                    if sql_obj['type'] == 'select':
+                        return cursor.fetchall()
+                    elif sql_obj['type'] in ('insert', 'update'):
+                        return cursor.lastrowid
 
     def _ensure_schema(self):
         self._execute('create schema')
