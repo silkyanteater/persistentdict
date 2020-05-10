@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "persistentdict"
-version = "0.1.0"
+version = "0.2.0"
 description = "Dictionary-like object with SQLite connection"
 authors = ["silkyanteater <cyclopesrufus@gmail.com>"]
 
