@@ -1,10 +1,13 @@
 import os
 from contextlib import contextmanager
+import importlib.resources as pkg_resources
 import sqlite3
 import pickle
 import yaml
 
 from .const import SQLITE_SOURCE_FILE
+
+sqlite_source_definitions = pkg_resources.read_text(__package__, SQLITE_SOURCE_FILE)
 
 
 @contextmanager
@@ -33,8 +36,7 @@ class PersistentDict(object):
                 filepath = os.path.join(os.getcwd(), connection_str)
             self.descriptor = filepath
             self.connection = sqlite3.connect(filepath)
-        with open(SQLITE_SOURCE_FILE, 'r') as sqlite_source:
-            self.sqls = yaml.safe_load(sqlite_source)
+        self.sqls = yaml.safe_load(sqlite_source_definitions)
         self._validate_sqls()
         self._ensure_schema()
 
