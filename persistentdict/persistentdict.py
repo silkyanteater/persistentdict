@@ -118,6 +118,9 @@ class PersistentDict(object):
         return iter(pickle.loads(r[0]) for r in rs)
 
     def __str__(self):
+        return str({key: value for key, value in self.items()})
+
+    def __repr__(self):
         base_str = f'Dict-like persistent key-value store'
         if hasattr(self, 'descriptor'):
             return f'{base_str} at {self.descriptor}'
